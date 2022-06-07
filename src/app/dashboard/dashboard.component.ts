@@ -7,6 +7,7 @@ import { DataService } from '../services/data.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+
   acno=""
   pswd=""
   amount=""
@@ -20,28 +21,27 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  deposit()
-  {
+  deposit(){
     var acno=this.acno
     var pswd=this.pswd
     var amount=this.amount
 
     const result = this.ds.deposit(acno,pswd,amount)
-    if(result)
-    {
-      alert(amount+= "deposited sucessfully and new balance is " +result)
+    if(result){
+      alert(amount+" depositted successfully and new balance is: "+result)
     }
-    }
-  withdraw()
-  {
+
+  }
+
+  withdraw(){
     var acno=this.acno1
     var pswd=this.pswd1
     var amount=this.amount1
 
     const result = this.ds.withdraw(acno,pswd,amount)
-    if(result)
-    {
-      alert(amount+= "withdraw sucessfully and new balance is " +result)
-    }
+    if(result){
+      alert(amount+" debitted successfully and new balance is: "+result)
+    } 
   }
+
 }
