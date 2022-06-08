@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DataService {
+  currentuser:any
   //DATABASE
   db: any = {
     1000: { "acno": 1000, "username": "Neer", "password": 1000, "balance": 5000 },
@@ -12,23 +13,41 @@ export class DataService {
   }
 
   constructor() { }
-
+ // save details()
+ saveDetails()
+ {
+if(this.db)
+{
+  localStorage.setItem("database",JSON.stringify(this.db))
+}
+if(this.currentuser)
+{
+  localStorage.setItem("currentuser",JSON.stringify(this.currentuser))
+}
+ }
   //login
-  login(acno: any, pswd: any) {
+  login(acno: any, pswd: any)
+   {
 
     let db = this.db
 
-    if (acno in db) {
-      if (pswd == db[acno]["password"]) {
+    if (acno in db) 
+    {
+      if (pswd == db[acno]["password"])
+       {
+         this.currentuser = db[acno]["username"]
+         this.saveDetails()
         return true
 
       }
-      else {
+      else 
+      {
         alert("Incorrect Password")
         return false
       }
     }
-    else {
+    else 
+    {
       alert("User does not exist!!!")
       return false
     }
@@ -38,18 +57,22 @@ export class DataService {
   register(username: any, acno: any, password: any) {
     let db = this.db
 
-    if (acno in db) {
+    if (acno in db) 
+    {
       return false
     }
-    else {
+    else 
+    {
       //insert in db
-      db[acno] = {
+      db[acno] =
+       {
         acno,
         username,
         password,
         "balance": 0
       }
       console.log(db)
+      this.saveDetails()
       return true
 
     }
@@ -62,11 +85,12 @@ export class DataService {
     let db= this.db
     if(acno in db){
 
-      if(password == db[acno]["password"]){
+      if(password == db[acno]["password"])
+      {
 
         db[acno]["balance"]+=amount
         console.log(db);
-        
+        this.saveDetails()
         return db[acno]["balance"]
       }
       else{
@@ -86,11 +110,14 @@ export class DataService {
     let db= this.db
     if(acno in db){
 
-      if(password == db[acno]["password"]){
+      if(password == db[acno]["password"])
+      {
 
-        if(db[acno]["balance"]>amount){
+        if(db[acno]["balance"]>amount)
+        {
 
           db[acno]["balance"]-=amount
+          this.saveDetails()
           return db[acno]["balance"]
         }
         else{
