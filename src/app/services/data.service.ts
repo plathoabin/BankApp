@@ -5,14 +5,34 @@ import { Injectable } from '@angular/core';
 })
 export class DataService {
   currentuser:any
+  currentAcno:any
   //DATABASE
   db: any = {
-    1000: { "acno": 1000, "username": "Neer", "password": 1000, "balance": 5000 },
-    1001: { "acno": 1001, "username": "Laisha", "password": 1001, "balance": 5000 },
-    1002: { "acno": 1002, "username": "Vypm", "password": 1002, "balance": 3000 }
+    1000: { "acno": 1000, "username": "Neer", "password": 1000, "balance": 5000,transaction:[] },
+    1001: { "acno": 1001, "username": "Laisha", "password": 1001, "balance": 5000,transaction:[] },
+    1002: { "acno": 1002, "username": "Vypm", "password": 1002, "balance": 3000,transaction:[] }
   }
 
-  constructor() { }
+  constructor() { 
+    this.getDetails()
+  }
+
+  //get details from local storage
+  getDetails()
+  {
+if(localStorage.getItem("database"))
+{
+  this.db=JSON.parse(localStorage.getItem("database")||'')
+}
+if(localStorage.getItem("currentuser"))
+{
+  this.currentuser=JSON.parse(localStorage.getItem("currentuser")||'')
+}
+if(localStorage.getItem("currentAcno"))
+{
+  this.currentAcno=JSON.parse(localStorage.getItem("currentAcno")||'')
+}
+  }
  // save details()
  saveDetails()
  {
@@ -23,6 +43,10 @@ if(this.db)
 if(this.currentuser)
 {
   localStorage.setItem("currentuser",JSON.stringify(this.currentuser))
+}
+if(this.currentAcno)
+{
+  localStorage.setItem("currentAcno",JSON.stringify(this.currentAcno))
 }
  }
   //login
@@ -36,6 +60,7 @@ if(this.currentuser)
       if (pswd == db[acno]["password"])
        {
          this.currentuser = db[acno]["username"]
+         this.currentAcno= acno
          this.saveDetails()
         return true
 
@@ -69,7 +94,8 @@ if(this.currentuser)
         acno,
         username,
         password,
-        "balance": 0
+        "balance": 0,
+        transaction:[]
       }
       console.log(db)
       this.saveDetails()
@@ -89,6 +115,10 @@ if(this.currentuser)
       {
 
         db[acno]["balance"]+=amount
+        db[acno].transaction.push({
+          type:"CREDIT",
+          amount:amount
+        })
         console.log(db);
         this.saveDetails()
         return db[acno]["balance"]
@@ -117,6 +147,10 @@ if(this.currentuser)
         {
 
           db[acno]["balance"]-=amount
+          db[acno].transaction.push({
+            type:"DEBIT",
+            amount:amount
+          })
           this.saveDetails()
           return db[acno]["balance"]
         }
@@ -136,5 +170,8 @@ if(this.currentuser)
       return false
     }
   }
-
+getTransaction(acno:any)
+{
+return this.db[acno].transaction
+}
 }
